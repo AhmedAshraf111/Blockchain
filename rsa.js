@@ -30,12 +30,10 @@ function verify(message, sig, pubKey) {
     return m === BigInt(message);
 }
 
-// إعداد المفاتيح
-let mod = 33n; // يجب أن يكون BigInt
+let mod = 33n; 
 let pub = { modulus: mod, e: 3n };
 let priv = { modulus: mod, d: 7n };
 
-// اختيار رسالة أقل من المودولوس
 let m = 18;
 let c = encrypt(m, pub);
 console.log(`${m} encrypted returns ${c}`);
@@ -45,7 +43,6 @@ console.log(`${c} decrypted returns ${m1}`);
 
 console.log();
 
-// توقيع الرسالة
 m = 24;
 let sig = sign(m, priv);
 console.log(`${m} signed returns signature ${sig}`);

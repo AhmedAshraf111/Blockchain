@@ -1,6 +1,5 @@
 "use strict";
 
-// تثبيت المكتبات عبر --> npm install blind-signatures jsbn
 let blindSignatures = require('blind-signatures');
 let BigInteger = require('jsbn').BigInteger;
 let rand = require('./rand.js');
@@ -9,10 +8,9 @@ const COPIES_REQUIRED = 10;
 
 class SpyAgency {
   constructor() {
-    this.key = blindSignatures.keyGeneration({ b: 2048 }); // إنشاء مفتاح بطول 2048 بت
+    this.key = blindSignatures.keyGeneration({ b: 2048 }); 
   }
 
-  // التحقق من أن `blindHash` و `blindingFactor` يتطابقان مع `hash`
   consistent(blindHash, factor, hash) {
     let n = this.key.keyPair.n;
     let e = new BigInteger(this.key.keyPair.e.toString());
@@ -22,7 +20,6 @@ class SpyAgency {
     return blindHash === b;
   }
 
-  // التحقق من صحة المستند
   verifyContents(blindHash, blindingFactor, originalDoc) {
     if (!originalDoc.match(/^The bearer of this signed document, .*, has full diplomatic immunity.$/)) {
       return false;
@@ -31,7 +28,6 @@ class SpyAgency {
     return this.consistent(blindHash, blindingFactor, h);
   }
 
-  // التوقيع على المستندات
   signDocument(blindDocs, response) {
     if (blindDocs.length !== COPIES_REQUIRED) {
       throw new Error(`There must be ${COPIES_REQUIRED} documents, but received ${blindDocs.length}`);
