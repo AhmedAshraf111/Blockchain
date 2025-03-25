@@ -23,10 +23,8 @@ function unblind(blindingFactor, sig, n) {
   });
 }
 
-// إنشاء الوكالة السرية
 let agency = new SpyAgency();
 
-// إنشاء 10 مستندات بأسماء وهمية
 let coverNames = [
   "Agent X", "Shadow", "Ghost", "Phantom", "Raven",
   "Eagle", "Nightfall", "Viper", "Wraith", "Cipher"
@@ -35,21 +33,18 @@ let coverNames = [
 let documents = coverNames.map(name => makeDocument(name));
 console.log("Documents:", documents);
 
-// تنفيذ عملية التشفير الأعمى
 let blindData = documents.map(doc => blind(doc, agency.n, agency.e));
 let blindedDocs = blindData.map(data => data.blinded);
 let blindingFactors = blindData.map(data => data.r);
 
 console.log("Blinded Documents:", blindedDocs);
 
-// توقيع المستندات من الوكالة السرية
 agency.signDocument(blindedDocs, (selected, verifyAndSign) => {
   let blindingFactorsCopy = blindingFactors.map((val, i) => (i === selected ? undefined : val));
   let originalDocsCopy = documents.map((val, i) => (i === selected ? undefined : val));
 
   let blindedSignature = verifyAndSign(blindingFactorsCopy, originalDocsCopy);
 
-  // فك التشفير الأعمى
   let unblindedSig = unblind(blindingFactors[selected], blindedSignature, agency.n);
   console.log(`Signature for document ${selected}:`, unblindedSig);
 });
